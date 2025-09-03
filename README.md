@@ -8,6 +8,7 @@ Secret reader, a handy tool to quietly read local text files at the far right of
 - Support for paging up and down
 - Show/hide content
 - Quit reading at any time
+- Clear all reading progress
 
 ## Installation
 
