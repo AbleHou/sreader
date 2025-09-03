@@ -2,7 +2,7 @@
   "name": "sreader",
   "displayName": "sreader",
   "description": "Secret reader.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.103.0"
   },
@@ -25,37 +25,37 @@
     "commands": [
       {
         "command": "sreader.show",
-        "title": "Show secret",
+        "title": "Show Secret",
         "when": "editorTextFocus"
       },
       {
         "command": "sreader.pageUp",
-        "title": "Page up secret",
+        "title": "Page Up Secret",
         "when": "editorTextFocus"
       },
       {
         "command": "sreader.pageDown",
-        "title": "Page down secret",
+        "title": "Page Down Secret",
         "when": "editorTextFocus"
       },
       {
         "command": "sreader.hide",
-        "title": "Hide secret content",
+        "title": "Hide Secret Content",
         "when": "editorTextFocus"
       },
       {
         "command": "sreader.quit",
-        "title": "Quit secret reader",
+        "title": "Quit Secret Reader",
         "when": "editorTextFocus"
       },
       {
         "command": "sreader.clear",
-        "title": "Clear all secret offsets",
+        "title": "Clear All Secret Offsets",
         "when": "editorTextFocus"
       }
     ],
     "configuration": {
-      "title": "Sreader configuration.",
+      "title": "Sreader Configuration.",
       "properties": {
         "sreader.textPath": {
           "type": "string",
