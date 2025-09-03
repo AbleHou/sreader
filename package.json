@@ -1,0 +1,91 @@
+{
+  "name": "sreader",
+  "displayName": "sreader",
+  "description": "Secret reader.",
+  "version": "1.0.1",
+  "engines": {
+    "vscode": "^1.103.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "author": {
+    "name": "Able"
+  },
+  "icon": "assets/icons/icon.png",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AbleHou/sreader.git"
+  },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sreader.show",
+        "title": "Show secret",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sreader.pageUp",
+        "title": "Page up secret",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sreader.pageDown",
+        "title": "Page down secret",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sreader.hide",
+        "title": "Hide secret content",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sreader.quit",
+        "title": "Quit secret reader",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sreader.clear",
+        "title": "Clear all secret offsets",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Sreader configuration.",
+      "properties": {
+        "sreader.textPath": {
+          "type": "string",
+          "default": "",
+          "description": "Secret text file path"
+        },
+        "sreader.pageSize": {
+          "type": "number",
+          "default": 40,
+          "description": "page size"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.103.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
