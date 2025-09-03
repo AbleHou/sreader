@@ -12,6 +12,7 @@
   "author": {
     "name": "Able"
   },
+  "publisher": "cats-family",
   "icon": "assets/icons/icon.png",
   "license": "Apache-2.0",
   "repository": {
