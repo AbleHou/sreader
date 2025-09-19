@@ -19,6 +19,7 @@ let contentPanel: vscode.StatusBarItem | undefined;
 let textContent: string = '';
 let pageSize: number = 20;
 let textPath: string = '';
+let panelsVisible: boolean = false;
 
 function getConfig() {
 	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
@@ -85,13 +86,15 @@ function showPanels(context: vscode.ExtensionContext, offset: number) {
 	operationPanel.show();
 	progressPanel.show();
 	contentPanel.show();
+	panelsVisible = true;
 	updatePanels(context, offset);
 }
 
-async function openSettings() {
+async function openSettings(context: vscode.ExtensionContext, currentOffset: number, saveOffsetFn: (offset: number) => void) {
 	const action = await vscode.window.showQuickPick([
 		{ label: '$(folder) Set Text Path', value: 'textPath' },
 		{ label: '$(symbol-numeric) Set Page Size', value: 'pageSize' },
+		{ label: '$(arrow-right) Set Current Offset', value: 'currentOffset' },
 	], {
 		placeHolder: 'Choose configuration option'
 	});
@@ -108,7 +111,7 @@ async function openSettings() {
 				});
 				if (newPath !== undefined) {
 					await config.update(CONFIG_TEXT_PATH, newPath, vscode.ConfigurationTarget.Global);
-					vscode.commands.executeCommand('sreader.show');
+					vscode.commands.executeCommand('sreader.toggle');
 					vscode.window.showInformationMessage('Text path updated');
 				}
 				break;
@@ -123,8 +126,36 @@ async function openSettings() {
 				});
 				if (newSize !== undefined) {
 					await config.update(CONFIG_PAGE_SIZE, parseInt(newSize), vscode.ConfigurationTarget.Global);
-					vscode.commands.executeCommand('sreader.show');
+					vscode.commands.executeCommand('sreader.toggle');
 					vscode.window.showInformationMessage('Page size updated');
+				}
+				break;
+			case 'currentOffset':
+				const currentProgress = textContent.length > 0 ? Math.round((currentOffset / textContent.length) * 100) : 0;
+				const newOffset = await vscode.window.showInputBox({
+					prompt: 'Enter new offset position (0 to ' + Math.max(0, textContent.length - pageSize) + ')',
+					value: currentOffset.toString(),
+					placeHolder: `Current: ${currentOffset} (${currentProgress}% of text)`,
+					validateInput: (value) => {
+						const num = parseInt(value);
+						const maxOffset = Math.max(0, textContent.length - pageSize);
+						if (isNaN(num)) {
+							return 'Please enter a valid number';
+						}
+						if (num < 0) {
+							return 'Offset cannot be negative';
+						}
+						if (num > maxOffset) {
+							return `Offset cannot exceed ${maxOffset}`;
+						}
+						return null;
+					}
+				});
+				if (newOffset !== undefined) {
+					const offsetValue = parseInt(newOffset);
+					saveOffsetFn(offsetValue);
+					updatePanels(context, offsetValue);
+					vscode.window.showInformationMessage(`Offset updated to ${offsetValue}`);
 				}
 				break;
 		}
@@ -156,6 +187,19 @@ function hidePanels(dispose: boolean = false) {
 		}
 		contentPanel = undefined;
 	}
+	panelsVisible = false;
+}
+
+function togglePanels(context: vscode.ExtensionContext, offset: number) {
+	if (panelsVisible) {
+		hidePanels();
+	} else {
+		getConfig();
+		textContent = loadText();
+		if (textContent) {
+			showPanels(context, offset);
+		}
+	}
 }
 
 function updatePanels(context: vscode.ExtensionContext, offset: number) {
@@ -180,22 +224,27 @@ export function activate(context: vscode.ExtensionContext) {
 	let maxOffset = Math.max(0, textContent.length - pageSize);
 
 	function saveOffset(newOffset: number) {
+		offset = newOffset; // 更新局部变量
 		offsetMap[textPath] = newOffset;
 		context.globalState.update(STATE_OFFSET, offsetMap);
 	}
 
+	function getCurrentOffset(): number {
+		return offset;
+	}
+
 	context.subscriptions.push(
-		vscode.commands.registerCommand('sreader.show', () => {
+		vscode.commands.registerCommand('sreader.toggle', () => {
 			getConfig();
 			textContent = loadText();
 			// get offsetMap and current offset
 			offsetMap = context.globalState.get<{ [file: string]: number }>(STATE_OFFSET, {});
 			offset = offsetMap[textPath] ?? 0;
 			maxOffset = Math.max(0, textContent.length - pageSize);
-			showPanels(context, offset);
+			togglePanels(context, offset);
 		}),
 		vscode.commands.registerCommand('sreader.openSettings', async () => {
-			await openSettings();
+			await openSettings(context, getCurrentOffset(), saveOffset);
 		}),
 		vscode.commands.registerCommand('sreader.pageUp', () => {
 			offset = Math.max(0, offset - pageSize);
@@ -206,13 +255,6 @@ export function activate(context: vscode.ExtensionContext) {
 			offset = Math.min(maxOffset, offset + pageSize);
 			saveOffset(offset);
 			updatePanels(context, offset);
-		}),
-		vscode.commands.registerCommand('sreader.hide', () => {
-			hidePanels();
-		}),
-		vscode.commands.registerCommand('sreader.quit', () => {
-			saveOffset(offset);
-			hidePanels(true);
 		}),
 		vscode.commands.registerCommand('sreader.clear', () => {
 			context.globalState.update(STATE_OFFSET, {});

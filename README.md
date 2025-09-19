@@ -4,12 +4,11 @@ Secret reader, a handy tool to quietly read local text files at the far right of
 
 ## Features
 
-- Display the content of a local text file in the far right of the status bar
-- Support for paging up and down
-- Show/hide content
-- Quit reading at any time
-- Clear all reading progress
-- Click "book" to setting configuration 
+- Display the content of a local text file in the far right of the status bar.
+- Click "book" icon to setting "text path" "page size" and "current offset".
+- Toggle content at any time.
+- Support for paging up and down.
+- Clear all reading progress.
 
 ## Installation
 
@@ -22,11 +21,9 @@ Secret reader, a handy tool to quietly read local text files at the far right of
 
 1. Configure the local text file path (`sreader.textPath`) and page size (`sreader.pageSize`) in the settings.
 2. Use the vscode Command Palette and enter the following commands:
-   - `Show Secret`: Display content
+   - `Toggle Secret Reader`: Display content
    - `Page Up Secret`: Navigate to previous page  
    - `Page Down Secret`: Navigate to next page
-   - `Hide Secret Content`: Hide the content panels
-   - `Quit Secret Reader`: Completely quit and clean up
    - `Clear All Secret Offsets`: Reset all reading progress
 
 The content will be displayed as a single line at the far right of the status bar, perfect for discreet reading.
@@ -40,14 +37,12 @@ The content will be displayed as a single line at the far right of the status ba
 
 ## Commands
 
-| Command                 | Description      |
-|-------------------------|-----------------|
-| sreader.show            | Show content    |
-| sreader.pageUp          | Previous page   |
-| sreader.pageDown        | Next page       |
-| sreader.hide            | Hide content    |
-| sreader.quit            | Quit reading    |
-| sreader.clear           | Clear progress  |
+| Command                 | Description     | Recommand Keyboard Shortcuts |
+|-------------------------|-----------------| -----------------------------|
+| sreader.toggle          | Toggle content  | ctrl+shift+up
+| sreader.pageUp          | Previous page   |                              |
+| sreader.pageDown        | Next page       | ctrl+shift+down              |
+| sreader.clear           | Clear progress  |                              |
 
 ## Examples
 
@@ -55,5 +50,5 @@ The content will be displayed as a single line at the far right of the status ba
 
 ## License
 
-Apache-2.0
+MIT
 

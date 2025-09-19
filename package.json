@@ -2,7 +2,7 @@
   "name": "sreader",
   "displayName": "sreader",
   "description": "Secret reader.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.103.0"
   },
@@ -24,8 +24,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "sreader.show",
-        "title": "Show Secret",
+        "command": "sreader.toggle",
+        "title": "Toggle Secret Reader",
         "when": "editorTextFocus"
       },
       {
@@ -36,16 +36,6 @@
       {
         "command": "sreader.pageDown",
         "title": "Page Down Secret",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "sreader.hide",
-        "title": "Hide Secret Content",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "sreader.quit",
-        "title": "Quit Secret Reader",
         "when": "editorTextFocus"
       },
       {
